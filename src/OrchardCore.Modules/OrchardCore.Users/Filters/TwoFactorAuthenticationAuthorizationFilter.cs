@@ -121,7 +121,7 @@ public sealed class TwoFactorAuthenticationAuthorizationFilter : IAsyncAuthoriza
                 // get user's original URL
                 var currentUrl = context.HttpContext.Request.GetEncodedUrl();
                 var requestScheme = context.HttpContext.Request.Scheme;
- 
+                var host = context.HttpContext.Request.Host;
                 var returnUrl = currentUrl.StartsWith($"{requestScheme}://{host}")
                     ? $"{context.HttpContext.Request.Path}{context.HttpContext.Request.QueryString}"
                     : currentUrl;

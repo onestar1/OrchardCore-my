@@ -331,6 +331,7 @@ public sealed class LiquidStartup : StartupBase
                     nameof(User.EmailConfirmed) => user.EmailConfirmed ? BooleanValue.True : BooleanValue.False,
                     nameof(User.IsEnabled) => user.IsEnabled ? BooleanValue.True : BooleanValue.False,
                     nameof(User.RoleNames) => new ArrayValue(user.RoleNames.Select(x => new StringValue(x)).ToArray()),
+                    nameof(User.PhoneNumber)=> new StringValue(user.PhoneNumber),
                     nameof(User.Properties) => new ObjectValue(user.Properties),
                     _ => NilValue.Instance
                 };
@@ -339,7 +340,8 @@ public sealed class LiquidStartup : StartupBase
        .AddLiquidFilter<UsersByIdFilter>("users_by_id")
        .AddLiquidFilter<HasPermissionFilter>("has_permission")
        .AddLiquidFilter<IsInRoleFilter>("is_in_role")
-       .AddLiquidFilter<UserEmailFilter>("user_email");
+       .AddLiquidFilter<UserEmailFilter>("user_email")
+        .AddLiquidFilter<UserPhoneNumberFilter>("user_phonenumber");
     }
 }
 

@@ -71,9 +71,9 @@ public sealed class TwoFactorAuthenticationAuthorizationFilter : IAsyncAuthoriza
 
             if (await _twoFactorHandlerCoordinator.IsRequiredAsync(user))
             {
-                // 获取当前请求的 URL
+                // get user's original URL
                 var originalUrl = context.HttpContext.Request.GetEncodedUrl();
-                // 构建带有 returnUrl 参数的重定向 URL
+                
                 var redirectUrl = $"/{_userOptions.TwoFactorAuthenticationPath}?returnUrl={Uri.EscapeDataString(originalUrl)}";
                 context.Result = new RedirectResult(redirectUrl);
                 return;
@@ -118,21 +118,15 @@ public sealed class TwoFactorAuthenticationAuthorizationFilter : IAsyncAuthoriza
 
             if (await _twoFactorHandlerCoordinator.IsRequiredAsync(user))
             {
-                // 获取当前访问的URL
+                // get user's original URL
                 var currentUrl = context.HttpContext.Request.GetEncodedUrl();
                 var requestScheme = context.HttpContext.Request.Scheme;
-                var host = context.HttpContext.Request.Host;
-// var currentUrl = $"{requestScheme}://{host}{context.HttpContext.Request.PathBase}{context.HttpContext.Request.Path}{context.HttpContext.Request.QueryString}";
-
-// var returnUrl = currentUrl.StartsWith($"{requestScheme}://{host}")
-//     ? $"{context.HttpContext.Request.PathBase}{context.HttpContext.Request.Path}{context.HttpContext.Request.QueryString}"
-//     : currentUrl;
-                // 如果是同域名，只保留路径部分
+ 
                 var returnUrl = currentUrl.StartsWith($"{requestScheme}://{host}")
                     ? $"{context.HttpContext.Request.Path}{context.HttpContext.Request.QueryString}"
                     : currentUrl;
 
-                // 生成重定向URL
+                // redirect to 2fa
                 var redirectUrl = $"/{_userOptions.TwoFactorAuthenticationPath}?returnUrl={Uri.EscapeDataString(returnUrl)}";
 
                 context.Result = new RedirectResult(redirectUrl);
